@@ -48,4 +48,4 @@ async def flush_hits_loop():
                     await db.commit()
         except Exception:
             pass
-        await asyncio.sleep(30)
+        await asyncio.sleep(60)
