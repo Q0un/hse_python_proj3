@@ -38,6 +38,11 @@ class RedisCache:
         r = await self._r()
         await r.hincrby("pending_hits", code, 1)
 
+    async def get_pending_hits(self, code: str) -> int:
+        r = await self._r()
+        val = await r.hget("pending_hits", code)
+        return int(val) if val else 0
+
     async def drain_hits(self) -> dict[str, int]:
         r = await self._r()
         raw = await r.hgetall("pending_hits")

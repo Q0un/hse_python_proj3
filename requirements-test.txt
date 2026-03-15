@@ -1,0 +1,9 @@
+-r requirements.txt
+pytest
+pytest-asyncio
+pytest-cov
+httpx
+aiosqlite
+fakeredis
+locust
+zope.event

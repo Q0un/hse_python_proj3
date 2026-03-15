@@ -104,13 +104,15 @@ async def search(db: DB, original_url: str = Query(..., description="URL для 
 @router.get("/links/{code}/stats", response_model=StatsOut)
 async def stats(code: str, db: DB):
     key = f"stats:{code}"
-    hit = await cache.get_json(key)
-    if hit:
-        return hit
+    cached = await cache.get_json(key)
+    if cached:
+        cached["hits"] += await cache.get_pending_hits(code)
+        return cached
 
     link = await _find_active(code, db)
     out = StatsOut.model_validate(link).model_dump(mode="json")
     await cache.put_json(key, out)
+    out["hits"] += await cache.get_pending_hits(code)
     return out
 
 
